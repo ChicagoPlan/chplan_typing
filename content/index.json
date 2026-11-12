@@ -57,6 +57,22 @@
    "author": "Jane Austen (1813)",
    "file": "en_pride.json",
    "count": 13
+  },
+  {
+   "id": "ko_prayers",
+   "lang": "ko",
+   "title": "주기도문·사도신경",
+   "author": "주기도문: 개역한글판(1961) / 사도신경: 신편찬송가(1935) 문구를 현대 맞춤법으로 표기",
+   "file": "ko_prayers.json",
+   "count": 16
+  },
+  {
+   "id": "en_prayers",
+   "lang": "en",
+   "title": "Lord's Prayer & Apostles' Creed",
+   "author": "KJV (Matthew 6:9-13) / The Church Hymnary (1893)",
+   "file": "en_prayers.json",
+   "count": 16
   }
  ]
 }

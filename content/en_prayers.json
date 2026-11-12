@@ -1,0 +1,74 @@
+{
+ "id": "en_prayers",
+ "lang": "en",
+ "title": "Lord's Prayer & Apostles' Creed",
+ "author": "KJV (Matthew 6:9-13) / The Church Hymnary (1893)",
+ "source": "en.wikisource.org",
+ "license": "public domain",
+ "sentences": [
+  {
+   "t": "Our Father which art in heaven, Hallowed be thy name.",
+   "r": "The Lord's Prayer (KJV)"
+  },
+  {
+   "t": "Thy kingdom come. Thy will be done in earth, as it is in heaven.",
+   "r": "The Lord's Prayer (KJV)"
+  },
+  {
+   "t": "Give us this day our daily bread.",
+   "r": "The Lord's Prayer (KJV)"
+  },
+  {
+   "t": "And forgive us our debts, as we forgive our debtors.",
+   "r": "The Lord's Prayer (KJV)"
+  },
+  {
+   "t": "And lead us not into temptation, but deliver us from evil:",
+   "r": "The Lord's Prayer (KJV)"
+  },
+  {
+   "t": "For thine is the kingdom, and the power, and the glory, for ever. Amen.",
+   "r": "The Lord's Prayer (KJV)"
+  },
+  {
+   "t": "I believe in God the father Almighty, Maker of heaven and earth:",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "And in Jesus Christ, His only Son our Lord;",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "Who was conceived by the Holy Ghost, born of the Virgin Mary;",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "Suffered under Pontius Pilate, was crucified, dead and buried;",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "The third day He rose again from the dead;",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "He ascended into heaven, and sitteth at the right hand of God the Father Almighty;",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "From thence He shall come to judge the quick and the dead.",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "I believe in the Holy Ghost: The Holy Catholic Church, the communion of saints,",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "The forgiveness of sins: The resurrection of the body:",
+   "r": "The Apostles' Creed"
+  },
+  {
+   "t": "And the life everlasting. Amen.",
+   "r": "The Apostles' Creed"
+  }
+ ]
+}
