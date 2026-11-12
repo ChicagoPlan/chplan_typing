@@ -1,0 +1,62 @@
+{
+ "version": 1,
+ "note": "책 추가 방법: content/<id>.json 파일을 만들고 이 목록에 항목 추가",
+ "books": [
+  {
+   "id": "ko_proverbs",
+   "lang": "ko",
+   "title": "잠언 (개역한글판)",
+   "author": "대한성서공회 개역한글판(1961)",
+   "file": "ko_proverbs.json",
+   "count": 29
+  },
+  {
+   "id": "ko_psalms",
+   "lang": "ko",
+   "title": "시편 (개역한글판)",
+   "author": "대한성서공회 개역한글판(1961)",
+   "file": "ko_psalms.json",
+   "count": 19
+  },
+  {
+   "id": "ko_dongbaek",
+   "lang": "ko",
+   "title": "동백꽃",
+   "author": "김유정 (1936)",
+   "file": "ko_dongbaek.json",
+   "count": 18
+  },
+  {
+   "id": "ko_unsu",
+   "lang": "ko",
+   "title": "운수 좋은 날",
+   "author": "현진건 (1924)",
+   "file": "ko_unsu.json",
+   "count": 18
+  },
+  {
+   "id": "en_proverbs",
+   "lang": "en",
+   "title": "Proverbs (King James Bible)",
+   "author": "King James Version (1611)",
+   "file": "en_proverbs.json",
+   "count": 22
+  },
+  {
+   "id": "en_alice",
+   "lang": "en",
+   "title": "Alice's Adventures in Wonderland",
+   "author": "Lewis Carroll (1865)",
+   "file": "en_alice.json",
+   "count": 18
+  },
+  {
+   "id": "en_pride",
+   "lang": "en",
+   "title": "Pride and Prejudice",
+   "author": "Jane Austen (1813)",
+   "file": "en_pride.json",
+   "count": 13
+  }
+ ]
+}

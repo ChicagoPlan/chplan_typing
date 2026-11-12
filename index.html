@@ -94,6 +94,7 @@ html,body{margin:0;min-height:100%;color:var(--text);
 .lab{font-size:12.5px;color:var(--mute);margin:0 0 6px;font-weight:700}
 .line{font-size:26px;line-height:1.7;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;letter-spacing:.3px;min-height:46px;user-select:none}
 .line.tg{margin-bottom:14px}
+.srcl{font-size:12.5px;color:var(--mute);margin:-6px 2px 12px;min-height:16px;text-align:right}
 .line span{border-radius:5px}
 .tg span{color:var(--mute)}
 .tg .ok{color:var(--ok)}
@@ -226,6 +227,7 @@ html,body{margin:0;min-height:100%;color:var(--text);
       <div class="card" id="tCard">
         <p class="lab" id="labT"></p>
         <div class="line tg" id="tg"></div>
+        <div class="srcl" id="srcL"></div>
         <p class="lab" id="labY"></p>
         <div class="ty" id="ty"><div class="line in" id="tyIn" style="min-height:0"></div></div>
         <textarea id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Type here"></textarea>
@@ -324,7 +326,7 @@ const T = {
 ko:{
   app:'타자 연습', hTitle:'무엇부터 해 볼까요?', hSub:'천천히, 한 글자씩 따라 해 봐요. 틀려도 괜찮아요!',
   modes:{keys:['자리 연습','손가락 위치 익히기'], words:['단어 연습','짧은 단어 따라 치기'], sents:['문장 연습','문장 따라 치기']},
-  levels:{keys:['기본 줄','기본 줄 + ㅎㅗ','윗줄','아랫줄','전체 자리'], words:['쉬운 단어','일상 단어','긴 단어'], sents:['짧은 문장','보통 문장']},
+  levels:{keys:['기본 줄','기본 줄 + ㅎㅗ','윗줄','아랫줄','전체 자리'], words:['쉬운 단어','일상 단어','긴 단어'], sents:['짧은 문장','보통 문장','책·성경 문장']},
   back:'← 처음으로', fix:'⌫ 고치기', skip:'건너뛰기', next:'다음 ▶', cleared:'단계 완료',
   labT:'따라 칠 글자', labY:'내가 친 글자', ph:'여기를 눌러 입력해요',
   kPrompt:'반짝이는 키를 눌러요', kWrong:'앗, 다른 키예요. 반짝이는 키를 찾아봐요.',
@@ -334,6 +336,7 @@ ko:{
   okWord:'잘했어요! Space나 Enter를 눌러 다음으로 가요.', okSent:'좋아요! 다음 문장으로 가요.',
   good:'지금까지 잘 맞아요.',
   acc:'정확도', time:'시간(초)', spd:'타수/분', spdW:'타수/분', again:'다시 하기', nextLv:'다음 단계 ▶', home:'처음으로',
+  bkLoad:'책을 불러오는 중이에요…', bkFail:'책 문장을 불러오지 못했어요. 인터넷을 확인하고 다시 눌러 주세요.',
   guest:'손님', userBtnT:'사용자 바꾸기',
   uTitle:'누가 연습하나요?', uSub:'이름만 적으면 돼요. 기록은 이 기기(이 브라우저)에만 저장돼요.', uPh:'이름 (최대 12자)', uAdd:'등록',
   uGuest:'등록 없이 해 보기 (기록 안 함)', uClose:'닫기', uEmpty:'아직 등록된 사람이 없어요.', uDel:'삭제', uDelSure:'정말 삭제', uCur:'사용 중',
@@ -350,7 +353,7 @@ ko:{
 en:{
   app:'Typing Practice', hTitle:'Where shall we start?', hSub:'Go slowly, one letter at a time. Mistakes are okay!',
   modes:{keys:['Key Positions','Learn where your fingers go'], words:['Word Practice','Type short words'], sents:['Sentence Practice','Type whole sentences']},
-  levels:{keys:['Home row','Home row + G H','Top row','Bottom row','All keys'], words:['Easy words','Everyday words','Long words'], sents:['Short','Normal']},
+  levels:{keys:['Home row','Home row + G H','Top row','Bottom row','All keys'], words:['Easy words','Everyday words','Long words'], sents:['Short','Normal','Books & Bible']},
   back:'← Home', fix:'⌫ Fix', skip:'Skip', next:'Next ▶', cleared:'levels cleared',
   labT:'Type this', labY:'What you typed', ph:'Tap here and start typing',
   kPrompt:'Press the glowing key', kWrong:'Oops, wrong key. Find the glowing one.',
@@ -360,6 +363,7 @@ en:{
   okWord:'Nice! Press Space or Enter to go on.', okSent:'Great! Next sentence.',
   good:'Looking good so far.',
   acc:'Accuracy', time:'Seconds', spd:'WPM', spdW:'WPM', again:'Try again', nextLv:'Next level ▶', home:'Home',
+  bkLoad:'Loading books…', bkFail:'Could not load the book sentences. Check your connection and try again.',
   guest:'Guest', userBtnT:'Change user',
   uTitle:'Who is practicing?', uSub:'Just type a name. Records are saved only on this device (this browser).', uPh:'Name (max 12 chars)', uAdd:'Add',
   uGuest:'Try without signing up (no records)', uClose:'Close', uEmpty:'No one is registered yet.', uDel:'Delete', uDelSure:'Really delete', uCur:'In use',
@@ -381,7 +385,7 @@ const S = {lang:'ko', view:'home', mode:null, level:0, items:[], idx:0, t0:null,
   // keys
   firstTry:0, missed:false,
   // text
-  target:'', errs:new Set(), errTotal:0, charTotal:0, strokeDone:0, composing:false, locked:false, done:false, lastRes:null};
+  target:'', errs:new Set(), errTotal:0, charTotal:0, strokeDone:0, composing:false, locked:false, done:false, lastRes:null, refs:null};
 const t = () => T[S.lang];
 
 function esc(c){ return c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c; }
@@ -498,6 +502,18 @@ function renderChips(){
   $('chips').querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => startRound(S.mode, Number(b.dataset.i))));
 }
 
+/* ---------- books (content/*.json, added over time) ---------- */
+const BOOKS = {};
+function loadBooks(lang){
+  if (BOOKS[lang]) return BOOKS[lang];
+  BOOKS[lang] = fetch('/content/index.json', {cache:'no-cache'}).then(r => { if (!r.ok) throw new Error('index'); return r.json(); })
+    .then(ix => Promise.all(ix.books.filter(b => b.lang === lang).map(b =>
+      fetch('/content/' + b.file, {cache:'no-cache'}).then(r => { if (!r.ok) throw new Error(b.file); return r.json(); }))))
+    .then(list => { const pool = []; list.forEach(bk => bk.sentences.forEach(x => pool.push({t:x.t, r:x.r}))); if (!pool.length) throw new Error('empty'); return pool; })
+    .catch(e => { delete BOOKS[lang]; throw e; });
+  return BOOKS[lang];
+}
+
 /* ---------- round start ---------- */
 function startRound(mode, level){
   S.mode = mode; S.level = level; S.idx = 0; S.t0 = null; S.done = false; S.locked = false;
@@ -519,6 +535,20 @@ function startRound(mode, level){
     S.items = seq.map(c => KEYMAP[c]);
     updateProgress(); keyPrompt();
   } else {
+    S.refs = null;
+    $('srcL').textContent = '';
+    if (mode === 'sents' && level === 2){
+      const ticket = {}; S.ticket = ticket; S.items = ['']; S.target = '';
+      $('nextBtn').hidden = true; $('tg').textContent = ''; $('tyIn').textContent = ''; $('msg').textContent = t().bkLoad; $('msg').className = 'msg';
+      loadBooks(S.lang).then(pool => {
+        if (S.ticket !== ticket || S.view !== 'play') return;
+        const pick = shuffle(pool).slice(0, ROUND.sents);
+        S.items = pick.map(x => x.t); S.refs = pick.map(x => x.r);
+        updateProgress(); loadItem();
+      }).catch(() => { if (S.ticket === ticket) $('msg').textContent = t().bkFail; });
+      return;
+    }
+    S.ticket = null;
     S.items = shuffle(mode === 'words' ? WORDS[S.lang][level] : SENTS[S.lang][level]).slice(0, ROUND[mode]);
     $('nextBtn').hidden = mode !== 'words';
     updateProgress(); loadItem();
@@ -596,6 +626,7 @@ function finishKeys(){
 /* ---------- text mode (words / sentences) ---------- */
 function loadItem(){
   S.target = S.items[S.idx]; S.errs = new Set(); S.locked = false; S.composing = false;
+  $('srcL').textContent = S.refs ? '— ' + S.refs[S.idx] : '';
   setInputRaw('');
   $('nextBtn').classList.remove('pulse'); $('fixBtn').classList.remove('pulse');
   updateProgress();
@@ -644,6 +675,7 @@ function render(){
 
 function update(){
   if (S.done || S.locked) return;
+  if (!S.target){ if (inp.value) setInputRaw(''); return; }   // books still loading
   let v = inp.value;
   if (S.mode === 'words'){
     const c = v.replace(/\s+$/, '');
