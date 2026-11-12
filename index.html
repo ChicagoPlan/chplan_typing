@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>타자 연습 · Typing Practice</title>
+<meta name="description" content="초보자를 위한 타자 연습: 자리, 단어, 문장 연습 (한국어, English)">
+<style>
+@font-face{font-family:'NanumSquare Neo';font-weight:400;font-style:normal;font-display:swap;src:url('/fonts/NanumSquareNeo-bRg.woff') format('woff');}
+@font-face{font-family:'NanumSquare Neo';font-weight:700;font-style:normal;font-display:swap;src:url('/fonts/NanumSquareNeo-cBd.woff') format('woff');}
+:root{
+  --bg1:#eef3ff; --bg2:#fff0f6; --card:#ffffff; --text:#1f2536; --mute:#7a8396; --line:#e4e8f1;
+  --ok:#17a35f; --okbg:rgba(23,163,95,.13); --bad:#e0443f; --badbg:rgba(224,68,63,.14);
+  --acc:#4f6df5; --accbg:rgba(79,109,245,.13); --star:#ffb400; --shadow:0 8px 28px rgba(60,80,140,.12);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg1:#10142a;--bg2:#1d1233;--card:#1a1f33;--text:#eceff8;--mute:#98a1b8;--line:#2b3350;
+        --ok:#52d08c;--okbg:rgba(82,208,140,.16);--bad:#ff7b76;--badbg:rgba(255,123,118,.2);
+        --acc:#8aa0ff;--accbg:rgba(138,160,255,.18);--shadow:0 8px 28px rgba(0,0,0,.35);}
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%;color:var(--text);
+  background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;
+  font-family:'NanumSquare Neo','NanumSquareNeo','Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',system-ui,sans-serif;
+  -webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:16px 14px 48px}
+.head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.logo{font-size:20px;font-weight:800;letter-spacing:-.3px}
+.seg{display:inline-flex;background:var(--card);border-radius:12px;box-shadow:var(--shadow);padding:3px}
+.seg button{border:0;background:transparent;color:var(--mute);padding:8px 14px;border-radius:9px;font:inherit;font-size:14px;cursor:pointer}
+.seg button.on{background:var(--acc);color:#fff;font-weight:700}
+.btn{border:0;background:var(--card);color:var(--text);border-radius:12px;padding:11px 16px;font:inherit;font-size:15px;
+  box-shadow:var(--shadow);cursor:pointer;transition:transform .08s}
+.btn:active{transform:scale(.97)}
+.btn.main{background:var(--acc);color:#fff;font-weight:700}
+.btn.fix{background:var(--bad);color:#fff;font-weight:700}
+.btn.pulse{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(224,68,63,.5)}50%{box-shadow:0 0 0 9px rgba(224,68,63,0)}}
+
+/* home */
+.hello{margin:6px 2px 16px}
+.hello h2{margin:0 0 4px;font-size:24px;letter-spacing:-.4px}
+.hello p{margin:0;color:var(--mute);font-size:15px}
+.cards{display:grid;gap:12px}
+.mode{display:flex;align-items:center;gap:14px;background:var(--card);border-radius:20px;padding:18px;box-shadow:var(--shadow);
+  border:0;color:var(--text);font:inherit;text-align:left;cursor:pointer;width:100%;transition:transform .1s}
+.mode:active{transform:scale(.985)}
+.mode .ic{flex:none;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;font-size:30px}
+.mode b{display:block;font-size:19px;margin-bottom:3px}
+.mode span{color:var(--mute);font-size:14px}
+.mode .pg{margin-left:auto;font-size:13px;color:var(--acc);white-space:nowrap;font-weight:700}
+
+/* play */
+.top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.top .ttl{font-weight:800;font-size:17px;flex:1}
+.top .cnt{color:var(--mute);font-variant-numeric:tabular-nums;font-size:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 8px;margin-bottom:4px}
+.chip{flex:none;border:0;background:var(--card);color:var(--mute);border-radius:20px;padding:8px 14px;font:inherit;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow)}
+.chip.on{background:var(--acc);color:#fff;font-weight:700}
+.chip i{font-style:normal;color:var(--star);margin-left:4px;letter-spacing:1px}
+.chip.on i{color:#ffe27a}
+.prog{height:8px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:14px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),#a07bff);border-radius:6px;transition:width .2s}
+.card{position:relative;background:var(--card);border-radius:22px;padding:22px 18px;box-shadow:var(--shadow);border:2px solid transparent;transition:border-color .15s}
+.card.focus{border-color:var(--acc)}
+.card.shake{animation:shake .25s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+
+/* keys mode */
+.kp{text-align:center}
+.kbig{font-size:92px;font-weight:800;line-height:1;margin:2px 0 8px;color:var(--acc)}
+.kfing{display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:700}
+.kfing u{width:16px;height:16px;border-radius:50%;display:inline-block;text-decoration:none}
+.kmsg{margin-top:8px;min-height:22px;font-size:14.5px;color:var(--mute)}
+.kmsg.bad{color:var(--bad);font-weight:700}
+.kb{--k:clamp(24px,calc((min(100vw,760px) - 96px)/11),54px);margin:16px auto 0;display:flex;flex-direction:column;gap:6px;align-items:center;user-select:none}
+.krow{display:flex;gap:6px}
+.krow:nth-child(2){margin-left:calc(var(--k)*.55)}
+.krow:nth-child(3){margin-left:calc(var(--k)*1.3)}
+.key{position:relative;width:var(--k);height:calc(var(--k)*1.15);border:0;border-radius:calc(var(--k)*.22);color:#1f2536;
+  font:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;
+  box-shadow:0 3px 0 rgba(0,0,0,.18);transition:transform .06s}
+.key b{font-size:calc(var(--k)*.46)}
+.key small{font-size:calc(var(--k)*.26);opacity:.6;margin-top:2px;text-transform:uppercase}
+.key.home::after{content:"";position:absolute;bottom:calc(var(--k)*.1);width:34%;height:3px;border-radius:2px;background:rgba(0,0,0,.4)}
+.key.dim{opacity:.38}
+.key.target{outline:4px solid var(--acc);outline-offset:2px;animation:glow 1s infinite;z-index:1}
+@keyframes glow{50%{transform:translateY(-3px) scale(1.07)}}
+.key.ok{background:#6fe3a2!important}
+.key.bad{background:#ff8d88!important;animation:shake .25s}
+
+/* text mode */
+.lab{font-size:12.5px;color:var(--mute);margin:0 0 6px;font-weight:700}
+.line{font-size:26px;line-height:1.7;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;letter-spacing:.3px;min-height:46px;user-select:none}
+.line.tg{margin-bottom:14px}
+.line span{border-radius:5px}
+.tg span{color:var(--mute)}
+.tg .ok{color:var(--ok)}
+.tg .bad{color:var(--bad);box-shadow:inset 0 -3px 0 var(--bad)}
+.tg .cur{background:var(--accbg);color:var(--text);box-shadow:inset 0 -3px 0 var(--acc)}
+.ty{background:var(--bg1);border-radius:14px;padding:8px 14px;min-height:62px;display:flex;align-items:center}
+@media (prefers-color-scheme:dark){.ty{background:rgba(255,255,255,.05)}}
+.ty .in{flex:1}
+.ty .ok{color:var(--ok)}
+.ty .bad{color:var(--bad);background:var(--badbg)}
+.ty .pend{color:var(--acc);box-shadow:inset 0 -3px 0 var(--acc)}
+.ty .ph{color:var(--mute);font-size:16px}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--acc);vertical-align:-3px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.ty.good{box-shadow:inset 0 0 0 2px var(--ok);background:var(--okbg)}
+.ty.err{box-shadow:inset 0 0 0 2px var(--bad)}
+#inp{position:absolute;inset:0;width:100%;height:100%;opacity:0;resize:none;border:0;outline:0;padding:0;margin:0;font-size:16px;overflow:hidden;cursor:text}
+.msg{margin:12px 2px 0;min-height:24px;font-size:15px;color:var(--mute);text-align:center}
+.msg.bad{color:var(--bad);font-weight:700}
+.msg.good{color:var(--ok);font-weight:700}
+.acts{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+
+/* result */
+.ov{position:fixed;inset:0;background:rgba(15,20,40,.55);display:grid;place-items:center;padding:18px;z-index:10}
+.res{background:var(--card);border-radius:24px;padding:26px 22px;max-width:380px;width:100%;text-align:center;box-shadow:var(--shadow)}
+.stars{font-size:46px;letter-spacing:6px;color:var(--star);line-height:1}
+.stars s{text-decoration:none;color:var(--line)}
+.res h3{margin:12px 0 4px;font-size:22px}
+.res .sub{color:var(--mute);font-size:14px;margin-bottom:14px}
+.rs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.rs div{background:var(--bg1);border-radius:14px;padding:10px 4px}
+@media (prefers-color-scheme:dark){.rs div{background:rgba(255,255,255,.06)}}
+.rs b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.rs span{font-size:11.5px;color:var(--mute)}
+.rb{display:flex;flex-direction:column;gap:8px}
+.rb .btn{box-shadow:none;border:1px solid var(--line)}
+.rb .btn.main{border-color:transparent}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="logo">⌨️ <span id="logoT"></span></div>
+    <div class="seg" id="langSeg">
+      <button data-l="ko" class="on">한국어</button>
+      <button data-l="en">English</button>
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <section id="home">
+    <div class="hello"><h2 id="hTitle"></h2><p id="hSub"></p></div>
+    <div class="cards" id="modeCards"></div>
+  </section>
+
+  <!-- PLAY -->
+  <section id="play" hidden>
+    <div class="top">
+      <button class="btn" id="backBtn"></button>
+      <div class="ttl" id="pTitle"></div>
+      <div class="cnt" id="pCnt"></div>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="prog"><i id="bar"></i></div>
+
+    <div id="keysPane" hidden>
+      <div class="card kp" id="kCard">
+        <div class="kbig" id="kBig"></div>
+        <div class="kfing"><u id="kDot"></u><span id="kFing"></span></div>
+        <div class="kmsg" id="kMsg"></div>
+        <div class="kb" id="kb"></div>
+      </div>
+    </div>
+
+    <div id="textPane" hidden>
+      <div class="card" id="tCard">
+        <p class="lab" id="labT"></p>
+        <div class="line tg" id="tg"></div>
+        <p class="lab" id="labY"></p>
+        <div class="ty" id="ty"><div class="line in" id="tyIn" style="min-height:0"></div></div>
+        <textarea id="inp" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Type here"></textarea>
+      </div>
+      <div class="msg" id="msg"></div>
+      <div class="acts">
+        <button class="btn fix" id="fixBtn"></button>
+        <button class="btn main" id="nextBtn" hidden></button>
+        <button class="btn" id="skipBtn"></button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="ov" id="ov" hidden>
+  <div class="res">
+    <div class="stars" id="rStars"></div>
+    <h3 id="rTitle"></h3>
+    <div class="sub" id="rSub"></div>
+    <div class="rs">
+      <div><b id="rAcc"></b><span id="rAccL"></span></div>
+      <div><b id="rSpd"></b><span id="rSpdL"></span></div>
+      <div><b id="rTime"></b><span id="rTimeL"></span></div>
+    </div>
+    <div class="rb">
+      <button class="btn main" id="rRetry"></button>
+      <button class="btn" id="rNext"></button>
+      <button class="btn" id="rHome"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- data ---------- */
+const FING = {
+  ko:['왼손 새끼손가락','왼손 약지','왼손 중지','왼손 검지','오른손 검지','오른손 중지','오른손 약지','오른손 새끼손가락'],
+  en:['Left pinky','Left ring finger','Left middle finger','Left index finger','Right index finger','Right middle finger','Right ring finger','Right pinky']
+};
+const FCOL = ['#ff9bb5','#ffb77a','#ffd86b','#93e08f','#6fd6dc','#86b6ff','#b9a1ff','#f4a0e3'];
+const ROWS = [
+  [['KeyQ','q','ㅂ',0],['KeyW','w','ㅈ',1],['KeyE','e','ㄷ',2],['KeyR','r','ㄱ',3],['KeyT','t','ㅅ',3],['KeyY','y','ㅛ',4],['KeyU','u','ㅕ',4],['KeyI','i','ㅑ',5],['KeyO','o','ㅐ',6],['KeyP','p','ㅔ',7]],
+  [['KeyA','a','ㅁ',0],['KeyS','s','ㄴ',1],['KeyD','d','ㅇ',2],['KeyF','f','ㄹ',3],['KeyG','g','ㅎ',3],['KeyH','h','ㅗ',4],['KeyJ','j','ㅓ',4],['KeyK','k','ㅏ',5],['KeyL','l','ㅣ',6],['Semicolon',';',';',7]],
+  [['KeyZ','z','ㅋ',0],['KeyX','x','ㅌ',1],['KeyC','c','ㅊ',2],['KeyV','v','ㅍ',3],['KeyB','b','ㅠ',3],['KeyN','n','ㅜ',4],['KeyM','m','ㅡ',4]]
+];
+const KEYMAP = {}, JAMO_REV = {};
+ROWS.forEach(r => r.forEach(a => { KEYMAP[a[0]] = {code:a[0], en:a[1], ko:a[2], f:a[3]}; JAMO_REV[a[2]] = a[0]; }));
+const toCode = ch => ch === ';' ? 'Semicolon' : 'Key' + ch.toUpperCase();
+const KEY_LEVELS = [
+  'asdfjkl;'.split('').map(toCode),
+  'asdfghjkl;'.split('').map(toCode),
+  'qwertyuiop'.split('').map(toCode),
+  'zxcvbnm'.split('').map(toCode),
+  Object.keys(KEYMAP)
+];
+
+const WORDS = {
+  ko:[
+    ["나라","아이","하나","마리","어머니","오리","이마","아니","언니","한라","안아","알아"],
+    ["사랑","하늘","바다","학교","친구","가족","오늘","내일","커피","연습","행복","감사","건강","여행","음악","사과","바람","구름","나무","시장"],
+    ["컴퓨터","대한민국","도서관","자동차","선생님","아이스크림","초콜릿","비행기","지하철","놀이공원","텔레비전","키보드","대중교통","고마워요","안녕하세요"]
+  ],
+  en:[
+    ["ask","sad","dad","fall","flag","glad","salad","shall","half","hall","all","gas","glass","flash","dash"],
+    ["apple","water","happy","house","music","green","light","table","phone","river","smile","friend","window","garden","summer","bread","chair","clock","dream","sleep"],
+    ["keyboard","practice","computer","beautiful","wonderful","chocolate","adventure","elephant","umbrella","notebook","telephone","important","together","tomorrow","breakfast"]
+  ]
+};
+const SENTS = {
+  ko:[
+    ["안녕하세요.","반갑습니다.","오늘도 힘내요.","천천히 해도 괜찮아요.","잘하고 있어요!","물 한 잔 마셔요.","하늘이 맑아요.","커피 한 잔 할까요?","차근차근 해 봐요.","좋은 하루 보내세요.","저는 연습 중이에요.","실수해도 괜찮아요."],
+    ["오늘도 차분하게 한 글자씩 정확하게 입력해 봅시다.","빠른 손보다 정확한 손이 결국 더 멀리 갑니다.","가을 햇살이 창가에 앉아 조용히 책장을 넘깁니다.","작은 습관이 쌓이면 어느새 큰 실력이 됩니다.","서두르지 않아도 괜찮으니 리듬을 먼저 찾아보세요.","따뜻한 커피 한 잔과 함께 하루를 천천히 시작합니다.","좋은 도구는 쓰는 사람의 시간을 아껴 줍니다.","오타가 났다면 고치고 다시 이어 가세요.","바람이 불면 나뭇잎이 흔들리고 마음도 가벼워집니다.","매일 십 분씩만 연습해도 한 달 뒤에는 달라집니다.","문장을 끝까지 읽고 손가락이 따라가게 해 보세요.","정확한 자세는 어깨와 손목의 부담을 줄여 줍니다.","오늘 할 일을 적어 두면 머릿속이 한결 맑아집니다.","좋은 질문은 좋은 답을 찾는 가장 빠른 길입니다.","꾸준함은 재능을 이기는 가장 조용한 힘입니다.","천천히 가는 사람도 멈추지 않으면 도착합니다.","한 줄 한 줄 완성할 때마다 자신감이 올라갑니다.","잠깐 쉬어 가며 눈과 손을 함께 풀어 주세요."]
+  ],
+  en:[
+    ["Hello there.","Nice to meet you.","Take your time.","You are doing great!","Mistakes are fine.","I love to learn.","The sky is blue.","Have a nice day.","Let's practice together.","One step at a time.","Drink some water.","Keep it up!"],
+    ["The quick brown fox jumps over the lazy dog.","Practice a little every day and the speed will follow.","Accuracy first, then speed; rhythm beats rushing.","A calm mind and relaxed hands make fewer mistakes.","Good tools save time for the people who use them.","If you make a typo, fix it and keep going.","Small habits add up to big skills over time.","Read the whole sentence and let your fingers follow.","Sit up straight and keep your wrists level.","Write down today's tasks and your head feels clearer.","A good question is the fastest path to a good answer.","Consistency is the quietest kind of talent.","Slow and steady still arrives if it never stops.","Each finished line builds a little more confidence.","Take short breaks and stretch your eyes and hands."]
+  ]
+};
+const ROUND = {keys:20, words:10, sents:5};
+const ICON = {keys:['🖐️','#ffe3ec'], words:['🔤','#e1f0ff'], sents:['📝','#e9f7e3']};
+
+const T = {
+ko:{
+  app:'타자 연습', hTitle:'무엇부터 해 볼까요?', hSub:'천천히, 한 글자씩 따라 해 봐요. 틀려도 괜찮아요!',
+  modes:{keys:['자리 연습','손가락 위치 익히기'], words:['단어 연습','짧은 단어 따라 치기'], sents:['문장 연습','문장 따라 치기']},
+  levels:{keys:['기본 줄','기본 줄 + ㅎㅗ','윗줄','아랫줄','전체 자리'], words:['쉬운 단어','일상 단어','긴 단어'], sents:['짧은 문장','보통 문장']},
+  back:'← 처음으로', fix:'⌫ 고치기', skip:'건너뛰기', next:'다음 ▶', cleared:'단계 완료',
+  labT:'따라 칠 글자', labY:'내가 친 글자', ph:'여기를 눌러 입력해요',
+  kPrompt:'반짝이는 키를 눌러요', kWrong:'앗, 다른 키예요. 반짝이는 키를 찾아봐요.',
+  typing:'천천히, 정확하게 쳐 봐요.',
+  wrong:'빨간 글자가 틀렸어요. [고치기]를 누르면 틀린 곳부터 지워요. (Backspace 키도 돼요)',
+  extra:'글자가 더 많아요. [고치기]를 눌러요.',
+  okWord:'잘했어요! Space나 Enter를 눌러 다음으로 가요.', okSent:'좋아요! 다음 문장으로 가요.',
+  good:'지금까지 잘 맞아요.',
+  acc:'정확도', time:'시간(초)', spd:'타수/분', spdW:'타수/분', again:'다시 하기', nextLv:'다음 단계 ▶', home:'처음으로',
+  rTitle:['좋은 시작이에요!','잘했어요!','대단해요!'],
+  rSub:['연습할수록 빨라져요. 한 번 더 해 볼까요?','정확하게 잘 쳤어요. 조금만 더!','거의 완벽해요. 다음 단계로 가 볼까요?']
+},
+en:{
+  app:'Typing Practice', hTitle:'Where shall we start?', hSub:'Go slowly, one letter at a time. Mistakes are okay!',
+  modes:{keys:['Key Positions','Learn where your fingers go'], words:['Word Practice','Type short words'], sents:['Sentence Practice','Type whole sentences']},
+  levels:{keys:['Home row','Home row + G H','Top row','Bottom row','All keys'], words:['Easy words','Everyday words','Long words'], sents:['Short','Normal']},
+  back:'← Home', fix:'⌫ Fix', skip:'Skip', next:'Next ▶', cleared:'levels cleared',
+  labT:'Type this', labY:'What you typed', ph:'Tap here and start typing',
+  kPrompt:'Press the glowing key', kWrong:'Oops, wrong key. Find the glowing one.',
+  typing:'Slow and steady.',
+  wrong:'The red letters are wrong. Tap [Fix] to erase from the first mistake. (Backspace works too)',
+  extra:'Too many letters. Tap [Fix].',
+  okWord:'Nice! Press Space or Enter to go on.', okSent:'Great! Next sentence.',
+  good:'Looking good so far.',
+  acc:'Accuracy', time:'Seconds', spd:'WPM', spdW:'WPM', again:'Try again', nextLv:'Next level ▶', home:'Home',
+  rTitle:['Good start!','Well done!','Excellent!'],
+  rSub:['Practice makes you faster. One more round?','Nicely done. Almost there!','Nearly perfect. Ready for the next level?']
+}};
+
+/* ---------- state ---------- */
+const $ = id => document.getElementById(id);
+const inp = $('inp'), card = $('tCard');
+const S = {lang:'ko', view:'home', mode:null, level:0, items:[], idx:0, t0:null, busy:false,
+  // keys
+  firstTry:0, missed:false,
+  // text
+  target:'', errs:new Set(), errTotal:0, charTotal:0, strokeDone:0, composing:false, locked:false, done:false, lastRes:null};
+const t = () => T[S.lang];
+
+function esc(c){ return c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c; }
+function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function strokesOf(s){ return S.lang === 'ko' ? s.normalize('NFD').length : s.length / 5; }
+
+function skey(mode, lvl){ return 'tp2_' + mode + '_' + S.lang + '_' + lvl; }
+function getStars(mode, lvl){ try { return Number(localStorage.getItem(skey(mode, lvl))) || 0; } catch(e){ return 0; } }
+function setStars(mode, lvl, n){ try { if (n > getStars(mode, lvl)) localStorage.setItem(skey(mode, lvl), String(n)); } catch(e){} }
+function levelCount(mode){ return t().levels[mode].length; }
+function starStr(n){ return '★'.repeat(n) + '☆'.repeat(3 - n); }
+
+/* ---------- views ---------- */
+function showView(v){
+  S.view = v;
+  $('home').hidden = v !== 'home';
+  $('play').hidden = v !== 'play';
+  $('ov').hidden = true;
+}
+
+function applyLang(){
+  document.documentElement.lang = S.lang;
+  $('logoT').textContent = t().app;
+  $('hTitle').textContent = t().hTitle;
+  $('hSub').textContent = t().hSub;
+  $('backBtn').textContent = t().back;
+  $('fixBtn').textContent = t().fix;
+  $('skipBtn').textContent = t().skip;
+  $('nextBtn').textContent = t().next;
+  $('labT').textContent = t().labT;
+  $('labY').textContent = t().labY;
+  buildKeyboard();
+  renderHome();
+}
+
+function renderHome(){
+  const h = ['keys','words','sents'].map(m => {
+    let cleared = 0; for (let i = 0; i < levelCount(m); i++) if (getStars(m, i) > 0) cleared++;
+    return '<button class="mode" data-m="' + m + '"><div class="ic" style="background:' + ICON[m][1] + '">' + ICON[m][0] + '</div>' +
+      '<div><b>' + t().modes[m][0] + '</b><span>' + t().modes[m][1] + '</span></div>' +
+      '<div class="pg">' + cleared + '/' + levelCount(m) + '</div></button>';
+  }).join('');
+  $('modeCards').innerHTML = h;
+  $('modeCards').querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => startRound(b.dataset.m, 0)));
+}
+
+function renderChips(){
+  $('chips').innerHTML = t().levels[S.mode].map((name, i) =>
+    '<button class="chip' + (i === S.level ? ' on' : '') + '" data-i="' + i + '">' + name + '<i>' + starStr(getStars(S.mode, i)) + '</i></button>').join('');
+  $('chips').querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => startRound(S.mode, Number(b.dataset.i))));
+}
+
+/* ---------- round start ---------- */
+function startRound(mode, level){
+  S.mode = mode; S.level = level; S.idx = 0; S.t0 = null; S.done = false; S.locked = false;
+  S.firstTry = 0; S.missed = false; S.errTotal = 0; S.charTotal = 0; S.strokeDone = 0;
+  showView('play');
+  $('pTitle').textContent = t().modes[mode][0];
+  $('keysPane').hidden = mode !== 'keys';
+  $('textPane').hidden = mode === 'keys';
+  renderChips();
+  if (mode === 'keys'){
+    let codes = KEY_LEVELS[level].filter(c => !(S.lang === 'ko' && c === 'Semicolon' && level < 4));
+    const seq = []; let pool = [];
+    while (seq.length < ROUND.keys){
+      if (!pool.length) pool = shuffle(codes);
+      const c = pool.pop();
+      if (seq.length && seq[seq.length - 1] === c && pool.length) { pool.unshift(c); continue; }
+      seq.push(c);
+    }
+    S.items = seq.map(c => KEYMAP[c]);
+    updateProgress(); keyPrompt();
+  } else {
+    S.items = shuffle(mode === 'words' ? WORDS[S.lang][level] : SENTS[S.lang][level]).slice(0, ROUND[mode]);
+    $('nextBtn').hidden = mode !== 'words';
+    updateProgress(); loadItem();
+  }
+}
+
+function updateProgress(){
+  const n = S.items.length;
+  $('pCnt').textContent = Math.min(S.idx + 1, n) + ' / ' + n;
+  $('bar').style.width = (100 * S.idx / n) + '%';
+}
+
+/* ---------- keys mode ---------- */
+function buildKeyboard(){
+  $('kb').innerHTML = ROWS.map(r => '<div class="krow">' + r.map(a => {
+    const main = S.lang === 'ko' ? a[2] : a[1].toUpperCase();
+    const sub = S.lang === 'ko' ? (a[2] === a[1] ? '' : a[1]) : (a[2] === a[1] ? '' : a[2]);
+    return '<button class="key' + (a[0] === 'KeyF' || a[0] === 'KeyJ' ? ' home' : '') + '" data-c="' + a[0] + '" style="background:' + FCOL[a[3]] + '"><b>' + main + '</b><small>' + sub + '</small></button>';
+  }).join('') + '</div>').join('');
+  $('kb').querySelectorAll('.key').forEach(b => b.addEventListener('click', () => handleKey(b.dataset.c)));
+}
+
+function keyPrompt(){
+  const k = S.items[S.idx]; if (!k) return;
+  $('kBig').textContent = S.lang === 'ko' ? k.ko : k.en.toUpperCase();
+  $('kFing').textContent = FING[S.lang][k.f];
+  $('kDot').style.background = FCOL[k.f];
+  const msg = $('kMsg'); msg.textContent = t().kPrompt; msg.className = 'kmsg';
+  const set = new Set(S.items.map(x => x.code));
+  $('kb').querySelectorAll('.key').forEach(el => {
+    el.classList.toggle('target', el.dataset.c === k.code);
+    el.classList.remove('ok', 'bad');
+  });
+  updateProgress();
+}
+
+function resolveCode(e){
+  if (KEYMAP[e.code]) return e.code;
+  const k = e.key; if (!k || k.length !== 1) return null;
+  if (/^[a-zA-Z]$/.test(k)) return 'Key' + k.toUpperCase();
+  if (k === ';') return 'Semicolon';
+  return JAMO_REV[k] || null;
+}
+
+function flash(code, cls){
+  const el = $('kb').querySelector('[data-c="' + code + '"]');
+  if (!el) return; el.classList.remove('ok', 'bad'); void el.offsetWidth; el.classList.add(cls);
+  setTimeout(() => el.classList.remove(cls), 350);
+}
+
+function handleKey(code){
+  if (S.view !== 'play' || S.mode !== 'keys' || S.done || !KEYMAP[code]) return;
+  const k = S.items[S.idx]; if (!k) return;
+  if (!S.t0) S.t0 = performance.now();
+  if (code === k.code){
+    flash(code, 'ok');
+    if (!S.missed) S.firstTry++;
+    S.missed = false; S.idx++;
+    if (S.idx >= S.items.length){ S.done = true; $('bar').style.width = '100%'; setTimeout(finishKeys, 250); }
+    else keyPrompt();
+  } else {
+    S.missed = true;
+    flash(code, 'bad');
+    const m = $('kMsg'); m.textContent = t().kWrong; m.className = 'kmsg bad';
+    $('kCard').classList.remove('shake'); void $('kCard').offsetWidth; $('kCard').classList.add('shake');
+  }
+}
+
+function finishKeys(){
+  const sec = (performance.now() - S.t0) / 1000;
+  const n = S.items.length;
+  showResult({acc: Math.round(100 * S.firstTry / n), spd: Math.round(n / (sec / 60)), sec, spdUnit: S.lang === 'ko' ? '키/분' : 'keys/min'});
+}
+
+/* ---------- text mode (words / sentences) ---------- */
+function loadItem(){
+  S.target = S.items[S.idx]; S.errs = new Set(); S.locked = false; S.composing = false;
+  setInputRaw('');
+  $('nextBtn').classList.remove('pulse'); $('fixBtn').classList.remove('pulse');
+  updateProgress();
+  render();
+}
+
+function setInputRaw(s){
+  S.composing = false;
+  inp.blur(); inp.value = s; inp.focus({preventScroll:true});
+  try { inp.setSelectionRange(s.length, s.length); } catch(e){}
+}
+
+function render(){
+  const v = inp.value, len = v.length, tg = S.target;
+  const committed = S.composing ? len - 1 : len;
+  let bad = len > tg.length, anyWrong = false;
+  let th = '';
+  for (let i = 0; i < tg.length; i++){
+    let c = '';
+    if (i < len){
+      if (S.composing && i === len - 1) c = 'cur';
+      else if (v[i] === tg[i]) c = 'ok'; else { c = 'bad'; anyWrong = true; }
+    } else if (i === len) c = 'cur';
+    th += '<span class="' + c + '">' + esc(tg[i]) + '</span>';
+  }
+  $('tg').innerHTML = th;
+  let yh = '';
+  for (let i = 0; i < len; i++){
+    let c;
+    if (S.composing && i === len - 1) c = 'pend';
+    else if (i < tg.length && v[i] === tg[i]) c = 'ok'; else c = 'bad';
+    yh += '<span class="' + c + '">' + esc(v[i]) + '</span>';
+  }
+  $('tyIn').innerHTML = len ? yh + '<span class="caret"></span>' : '<span class="caret"></span><span class="ph">' + t().ph + '</span>';
+  const matched = v === tg;
+  const hasErr = anyWrong || bad;
+  const ty = $('ty'); ty.classList.toggle('good', matched); ty.classList.toggle('err', hasErr);
+  const msg = $('msg');
+  if (hasErr){ msg.textContent = bad && !anyWrong ? t().extra : t().wrong; msg.className = 'msg bad'; }
+  else if (matched){ msg.textContent = S.mode === 'words' ? t().okWord : t().okSent; msg.className = 'msg good'; }
+  else if (len){ msg.textContent = t().good; msg.className = 'msg'; }
+  else { msg.textContent = t().typing; msg.className = 'msg'; }
+  $('fixBtn').classList.toggle('pulse', hasErr);
+  $('nextBtn').classList.toggle('pulse', matched && S.mode === 'words');
+}
+
+function update(){
+  if (S.done || S.locked) return;
+  let v = inp.value;
+  if (S.mode === 'words'){
+    const c = v.replace(/\s+$/, '');
+    if (c !== v){                       // Space was pressed
+      if (c === S.target){ advance(false); return; }
+      inp.value = c; v = c;             // ignore early spaces
+    }
+  }
+  if (!S.t0 && v.length > 0) S.t0 = performance.now();
+  const committed = S.composing ? v.length - 1 : v.length;
+  for (let i = 0; i < committed && i < S.target.length; i++) if (v[i] !== S.target[i]) S.errs.add(i);
+  render();
+  if (S.mode === 'sents' && v === S.target && !S.composing){
+    S.locked = true; $('msg').textContent = t().okSent; setTimeout(() => advance(false), 450);
+  }
+}
+
+function advance(skipped){
+  if (S.done) return;
+  if (skipped){ S.errTotal += S.errs.size + 1; S.charTotal += S.target.length; }
+  else { S.errTotal += S.errs.size; S.charTotal += S.target.length; S.strokeDone += strokesOf(S.target); }
+  S.idx++;
+  if (S.idx >= S.items.length){ S.done = true; $('bar').style.width = '100%'; finishText(); return; }
+  loadItem();
+}
+
+function fix(){
+  if (S.locked || S.done) return;
+  const v = inp.value; let i = 0;
+  while (i < v.length && i < S.target.length && v[i] === S.target[i]) i++;
+  if (i === v.length) { render(); return; }      // nothing wrong
+  setInputRaw(v.slice(0, i)); update();
+}
+
+function finishText(){
+  const min = Math.max((performance.now() - S.t0) / 60000, 1 / 600);
+  const acc = Math.max(0, Math.round(100 * (1 - S.errTotal / Math.max(1, S.charTotal))));
+  showResult({acc, spd: Math.round(S.strokeDone / min), sec: min * 60, spdUnit: t().spd});
+}
+
+/* ---------- result ---------- */
+function showResult(r){
+  const stars = r.acc >= 95 ? 3 : r.acc >= 85 ? 2 : 1;
+  setStars(S.mode, S.level, stars);
+  S.lastRes = r;
+  $('rStars').innerHTML = '★'.repeat(stars) + '<s>' + '★'.repeat(3 - stars) + '</s>';
+  $('rTitle').textContent = t().rTitle[stars - 1];
+  $('rSub').textContent = t().rSub[stars - 1];
+  $('rAcc').textContent = r.acc + '%'; $('rAccL').textContent = t().acc;
+  $('rSpd').textContent = r.spd; $('rSpdL').textContent = r.spdUnit;
+  $('rTime').textContent = r.sec.toFixed(1); $('rTimeL').textContent = t().time;
+  $('rRetry').textContent = t().again; $('rHome').textContent = t().home;
+  const hasNext = S.level + 1 < levelCount(S.mode);
+  $('rNext').hidden = !hasNext; $('rNext').textContent = t().nextLv;
+  $('ov').hidden = false;
+  renderChips();
+}
+
+/* ---------- events ---------- */
+inp.addEventListener('compositionstart', () => { S.composing = true; });
+inp.addEventListener('compositionend', () => { S.composing = false; update(); });
+inp.addEventListener('input', update);
+inp.addEventListener('paste', e => e.preventDefault());
+inp.addEventListener('drop', e => e.preventDefault());
+inp.addEventListener('focus', () => card.classList.add('focus'));
+inp.addEventListener('blur', () => card.classList.remove('focus'));
+inp.addEventListener('keydown', e => {
+  if (e.key === 'Enter'){
+    e.preventDefault();
+    if (S.mode === 'words') setTimeout(() => { if (!S.done && !S.locked && inp.value === S.target) advance(false); }, 40);
+  } else if (e.key === 'Escape'){ e.preventDefault(); setInputRaw(''); update(); }
+});
+
+document.addEventListener('keydown', e => {
+  if (S.view !== 'play' || e.ctrlKey || e.metaKey || e.altKey || !$('ov').hidden) return;
+  if (S.mode === 'keys'){
+    if (e.repeat) return;
+    const c = resolveCode(e);
+    if (c){ e.preventDefault(); handleKey(c); }
+  } else if (document.activeElement !== inp){
+    inp.focus({preventScroll:true});
+  }
+});
+
+$('fixBtn').addEventListener('click', fix);
+$('skipBtn').addEventListener('click', () => advance(true));
+$('nextBtn').addEventListener('click', () => {
+  if (S.done || S.locked) return;
+  if (inp.value.replace(/\s+$/, '') === S.target) advance(false); else { inp.focus({preventScroll:true}); }
+});
+$('backBtn').addEventListener('click', () => { showView('home'); renderHome(); });
+$('rRetry').addEventListener('click', () => startRound(S.mode, S.level));
+$('rNext').addEventListener('click', () => startRound(S.mode, S.level + 1));
+$('rHome').addEventListener('click', () => { showView('home'); renderHome(); });
+card.addEventListener('click', () => inp.focus({preventScroll:true}));
+
+document.querySelectorAll('#langSeg button').forEach(b => b.addEventListener('click', () => {
+  S.lang = b.dataset.l;
+  document.querySelectorAll('#langSeg button').forEach(x => x.classList.toggle('on', x === b));
+  applyLang();
+  if (S.view === 'play') startRound(S.mode, Math.min(S.level, levelCount(S.mode) - 1));
+}));
+
+applyLang();
+showView('home');
+</script>
+</body>
+</html>
