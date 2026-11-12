@@ -135,6 +135,9 @@ html,body{margin:0;min-height:100%;color:var(--text);
 
 /* user chip + panel */
 .hr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.regbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:12px 14px;border-radius:14px;border:2px solid #f5a623;background:#fff7e6;color:#5a3b00;font-weight:700}
+.regbar[hidden]{display:none}
+.regbar .btn{background:#f5a623;color:#fff;border-color:#f5a623}
 .ubtn{padding:8px 12px;font-size:14px;border-radius:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .res.up{max-width:420px;text-align:left;max-height:90vh;overflow:auto}
 .res.up h3{margin:0 0 4px}
@@ -191,6 +194,7 @@ html,body{margin:0;min-height:100%;color:var(--text);
       </div>
     </div>
   </div>
+  <div class="regbar" id="regBar" role="alert" hidden><span id="regBarT"></span><button class="btn" id="regBarBtn"></button></div>
 
   <!-- HOME -->
   <section id="home">
@@ -337,7 +341,7 @@ ko:{
   good:'지금까지 잘 맞아요.',
   acc:'정확도', time:'시간(초)', spd:'타수/분', spdW:'타수/분', again:'다시 하기', nextLv:'다음 단계 ▶', home:'처음으로',
   bkLoad:'책을 불러오는 중이에요…', bkFail:'책 문장을 불러오지 못했어요. 인터넷을 확인하고 다시 눌러 주세요.',
-  guest:'손님', userBtnT:'사용자 바꾸기',
+  guest:'손님', userBtnT:'사용자 바꾸기', regNone:'⚠️ 사용자 등록이 안 되어 있어요. 등록해야 기록이 저장돼요.', regNoneBtn:'사용자 등록하기', regPick:'⚠️ 사용자를 선택해야 기록이 저장돼요.', regPickBtn:'사용자 선택',
   uTitle:'누가 연습하나요?', uSub:'이름만 적으면 돼요. 기록은 이 기기(이 브라우저)에만 저장돼요.', uPh:'이름 (최대 12자)', uAdd:'등록',
   uGuest:'등록 없이 해 보기 (기록 안 함)', uClose:'닫기', uEmpty:'아직 등록된 사람이 없어요.', uDel:'삭제', uDelSure:'정말 삭제', uCur:'사용 중',
   uNeed:'이름을 적어 주세요.', uDup:'이미 있는 이름이에요.', uFull:'최대 8명까지 등록할 수 있어요.',
@@ -364,7 +368,7 @@ en:{
   good:'Looking good so far.',
   acc:'Accuracy', time:'Seconds', spd:'WPM', spdW:'WPM', again:'Try again', nextLv:'Next level ▶', home:'Home',
   bkLoad:'Loading books…', bkFail:'Could not load the book sentences. Check your connection and try again.',
-  guest:'Guest', userBtnT:'Change user',
+  guest:'Guest', userBtnT:'Change user', regNone:'⚠️ No user is registered. Register to save your records.', regNoneBtn:'Register', regPick:'⚠️ Pick a user to save your records.', regPickBtn:'Pick user',
   uTitle:'Who is practicing?', uSub:'Just type a name. Records are saved only on this device (this browser).', uPh:'Name (max 12 chars)', uAdd:'Add',
   uGuest:'Try without signing up (no records)', uClose:'Close', uEmpty:'No one is registered yet.', uDel:'Delete', uDelSure:'Really delete', uCur:'In use',
   uNeed:'Please type a name.', uDup:'That name already exists.', uFull:'Up to 8 people can be registered.',
@@ -741,6 +745,10 @@ function renderUserBtn(){
   const u = curUser();
   $('userBtn').textContent = '👤 ' + (u ? u.name : t().guest);
   $('userBtn').title = t().userBtnT;
+  const L = t(), none = !U.users.length;
+  $('regBar').hidden = !!u;
+  $('regBarT').textContent = none ? L.regNone : L.regPick;
+  $('regBarBtn').textContent = none ? L.regNoneBtn : L.regPickBtn;
 }
 function renderUsers(){
   const L = t();
@@ -882,6 +890,7 @@ document.querySelectorAll('#langSeg button').forEach(b => b.addEventListener('cl
 
 $('stBack').addEventListener('click', () => { showView('home'); renderHome(); });
 $('userBtn').addEventListener('click', openUsers);
+$('regBarBtn').addEventListener('click', openUsers);
 $('uClose').addEventListener('click', closeUsers);
 $('uGuest').addEventListener('click', () => { U.cur = null; saveUsers(); closeUsers(); afterUserChange(); });
 $('uov').addEventListener('click', e => { if (e.target === $('uov')) closeUsers(); });
@@ -893,6 +902,7 @@ $('uForm').addEventListener('submit', e => {
   afterUserChange(); closeUsers();
 });
 
+try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
 applyLang();
 showView('home');
 if (!U.users.length && !LS.get('tp3_seen', 0)) openUsers();
