@@ -135,6 +135,9 @@ html,body{margin:0;min-height:100%;color:var(--text);
 
 /* user chip + panel */
 .hr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.keeptip{margin:12px 0 4px;padding:10px 12px;border-radius:12px;background:#eef6ff;border:1px solid #b9d7f5;font-size:13px;line-height:1.55;text-align:left}
+.keeptip b{display:block;margin-bottom:4px}
+.keeptip .cp{margin:4px 6px 0 0;padding:4px 10px;font-size:12px;border-radius:10px;cursor:pointer;border:1px solid #7fb2e5;background:#fff}
 .regbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:0 0 14px;padding:12px 14px;border-radius:14px;border:2px solid #f5a623;background:#fff7e6;color:#5a3b00;font-weight:700}
 .regbar[hidden]{display:none}
 .regbar .btn{background:#f5a623;color:#fff;border-color:#f5a623}
@@ -256,6 +259,7 @@ html,body{margin:0;min-height:100%;color:var(--text);
       <button class="btn main" id="uAdd" type="submit"></button>
     </form>
     <div class="umsg" id="uMsg"></div>
+    <div class="keeptip"><b id="ktT"></b><span id="ktB"></span><br><button class="cp" id="ktChrome" type="button"></button><button class="cp" id="ktEdge" type="button"></button><span id="ktOk" style="font-size:12px"></span></div>
     <div class="rb"><button class="btn" id="uGuest" type="button"></button><button class="btn" id="uClose" type="button"></button></div>
   </div>
 </div>
@@ -342,6 +346,7 @@ ko:{
   acc:'정확도', time:'시간(초)', spd:'타수/분', spdW:'타수/분', again:'다시 하기', nextLv:'다음 단계 ▶', home:'처음으로',
   bkLoad:'책을 불러오는 중이에요…', bkFail:'책 문장을 불러오지 못했어요. 인터넷을 확인하고 다시 눌러 주세요.',
   guest:'손님', userBtnT:'사용자 바꾸기', regNone:'⚠️ 사용자 등록이 안 되어 있어요. 등록해야 기록이 저장돼요.', regNoneBtn:'사용자 등록하기', regPick:'⚠️ 사용자를 선택해야 기록이 저장돼요.', regPickBtn:'사용자 선택',
+  ktT:'💡 닫았다 열면 기록이 사라지나요?', ktB:'브라우저가 닫을 때 사이트 데이터를 지우는 설정이면 그래요. 아래 주소를 복사해 주소창에 붙여넣은 뒤, "기기에 데이터를 저장하도록 허용됨"의 [추가]에 이 사이트(type.chicagoplan.com)를 넣어 주세요.', ktCh:'크롬 설정 주소 복사', ktEd:'엣지 설정 주소 복사', ktOk:'복사했어요. 주소창에 붙여넣으세요.',
   uTitle:'누가 연습하나요?', uSub:'이름만 적으면 돼요. 기록은 이 기기(이 브라우저)에만 저장돼요.', uPh:'이름 (최대 12자)', uAdd:'등록',
   uGuest:'등록 없이 해 보기 (기록 안 함)', uClose:'닫기', uEmpty:'아직 등록된 사람이 없어요.', uDel:'삭제', uDelSure:'정말 삭제', uCur:'사용 중',
   uNeed:'이름을 적어 주세요.', uDup:'이미 있는 이름이에요.', uFull:'최대 8명까지 등록할 수 있어요.',
@@ -369,6 +374,7 @@ en:{
   acc:'Accuracy', time:'Seconds', spd:'WPM', spdW:'WPM', again:'Try again', nextLv:'Next level ▶', home:'Home',
   bkLoad:'Loading books…', bkFail:'Could not load the book sentences. Check your connection and try again.',
   guest:'Guest', userBtnT:'Change user', regNone:'⚠️ No user is registered. Register to save your records.', regNoneBtn:'Register', regPick:'⚠️ Pick a user to save your records.', regPickBtn:'Pick user',
+  ktT:'💡 Records disappear after closing the browser?', ktB:'Your browser may be clearing site data on exit. Copy the address below into the address bar, then under "Allowed to save data on device" click [Add] and enter this site (type.chicagoplan.com).', ktCh:'Copy Chrome settings address', ktEd:'Copy Edge settings address', ktOk:'Copied. Paste it in the address bar.',
   uTitle:'Who is practicing?', uSub:'Just type a name. Records are saved only on this device (this browser).', uPh:'Name (max 12 chars)', uAdd:'Add',
   uGuest:'Try without signing up (no records)', uClose:'Close', uEmpty:'No one is registered yet.', uDel:'Delete', uDelSure:'Really delete', uCur:'In use',
   uNeed:'Please type a name.', uDup:'That name already exists.', uFull:'Up to 8 people can be registered.',
@@ -476,6 +482,7 @@ function applyLang(){
   $('stBack').textContent = t().stBack;
   $('uTitle').textContent = t().uTitle; $('uSub').textContent = t().uSub;
   $('uName').placeholder = t().uPh; $('uAdd').textContent = t().uAdd;
+  $('ktT').textContent = t().ktT; $('ktB').textContent = t().ktB; $('ktChrome').textContent = t().ktCh; $('ktEdge').textContent = t().ktEd;
   $('uGuest').textContent = t().uGuest; $('uClose').textContent = t().uClose;
   renderUserBtn(); renderUsers();
   buildKeyboard();
@@ -891,6 +898,10 @@ document.querySelectorAll('#langSeg button').forEach(b => b.addEventListener('cl
 $('stBack').addEventListener('click', () => { showView('home'); renderHome(); });
 $('userBtn').addEventListener('click', openUsers);
 $('regBarBtn').addEventListener('click', openUsers);
+function copyAddr(txt){ const ok=()=>{ $('ktOk').textContent = t().ktOk; };
+  try{ navigator.clipboard.writeText(txt).then(ok, ()=>{ $('ktOk').textContent = txt; }); }catch(e){ $('ktOk').textContent = txt; } }
+$('ktChrome').addEventListener('click', ()=>copyAddr('chrome://settings/content/siteData'));
+$('ktEdge').addEventListener('click', ()=>copyAddr('edge://settings/content/cookies'));
 $('uClose').addEventListener('click', closeUsers);
 $('uGuest').addEventListener('click', () => { U.cur = null; saveUsers(); closeUsers(); afterUserChange(); });
 $('uov').addEventListener('click', e => { if (e.target === $('uov')) closeUsers(); });
