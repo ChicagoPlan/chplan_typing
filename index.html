@@ -131,15 +131,63 @@ html,body{margin:0;min-height:100%;color:var(--text);
 .rb{display:flex;flex-direction:column;gap:8px}
 .rb .btn{box-shadow:none;border:1px solid var(--line)}
 .rb .btn.main{border-color:transparent}
+
+/* user chip + panel */
+.hr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ubtn{padding:8px 12px;font-size:14px;border-radius:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res.up{max-width:420px;text-align:left;max-height:90vh;overflow:auto}
+.res.up h3{margin:0 0 4px}
+.ulist{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.urow{display:flex;gap:8px;align-items:center}
+.urow .pick{flex:1;text-align:left;display:flex;align-items:center;gap:8px;box-shadow:none;border:2px solid var(--line);padding:10px 14px;min-width:0}
+.urow .pick.on{border-color:var(--acc);background:var(--accbg);font-weight:700}
+.urow .pick span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.urow .pick em{margin-left:auto;font-style:normal;font-size:12px;color:var(--acc)}
+.urow .del{box-shadow:none;border:1px solid var(--line);padding:10px 12px;font-size:13px;color:var(--mute)}
+.urow .del.arm{background:var(--bad);color:#fff;border-color:transparent;font-weight:700}
+.uadd{display:flex;gap:8px;margin-top:6px}
+.uadd input{flex:1;min-width:0;font:inherit;font-size:16px;padding:11px 14px;border-radius:12px;border:2px solid var(--line);background:var(--bg1);color:var(--text);outline:0}
+.uadd input:focus{border-color:var(--acc)}
+.umsg{min-height:20px;font-size:13.5px;color:var(--bad);margin:6px 2px 8px}
+.uempty{color:var(--mute);font-size:14px;margin:8px 2px}
+
+/* stats */
+.stt{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+@media (min-width:560px){.stt{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--card);border-radius:16px;padding:14px 10px;text-align:center;box-shadow:var(--shadow)}
+.tile b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+.tile span{font-size:12px;color:var(--mute)}
+.sec{background:var(--card);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.sec h4{margin:0 0 4px;font-size:15px}
+.sec .note{font-size:12px;color:var(--mute);margin:0 0 10px}
+.mrow{display:grid;grid-template-columns:1.3fr .6fr 1fr 1.2fr .8fr;gap:6px;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px;align-items:center}
+.mrow.hd{border-top:0;color:var(--mute);font-size:12px;padding-top:2px}
+.mrow div:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:6px;height:110px;padding-top:6px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bar i{display:block;width:100%;max-width:34px;background:linear-gradient(180deg,#a07bff,var(--acc));border-radius:6px 6px 2px 2px;min-height:2px}
+.bar small{font-size:10.5px;color:var(--mute);margin-top:4px;white-space:nowrap}
+.bar em{font-style:normal;font-size:10.5px;color:var(--mute);margin-bottom:2px}
+.rrow{display:flex;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13px}
+.rrow:first-of-type{border-top:0}
+.rrow .d{color:var(--mute);width:84px;flex:none;font-variant-numeric:tabular-nums}
+.rrow .w{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrow .n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rrow .st{color:var(--star);letter-spacing:1px;width:50px;text-align:right;flex:none}
+.stmsg{text-align:center;color:var(--mute);padding:26px 10px}
+.stmsg .btn{margin-top:12px}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="head">
     <div class="logo">⌨️ <span id="logoT"></span></div>
-    <div class="seg" id="langSeg">
-      <button data-l="ko" class="on">한국어</button>
-      <button data-l="en">English</button>
+    <div class="hr">
+      <button class="btn ubtn" id="userBtn"></button>
+      <div class="seg" id="langSeg">
+        <button data-l="ko" class="on">한국어</button>
+        <button data-l="en">English</button>
+      </div>
     </div>
   </div>
 
@@ -150,6 +198,12 @@ html,body{margin:0;min-height:100%;color:var(--text);
   </section>
 
   <!-- PLAY -->
+  <!-- STATS -->
+  <section id="stats" hidden>
+    <div class="top"><button class="btn" id="stBack"></button><div class="ttl" id="stTitle"></div></div>
+    <div id="stBody"></div>
+  </section>
+
   <section id="play" hidden>
     <div class="top">
       <button class="btn" id="backBtn"></button>
@@ -184,6 +238,20 @@ html,body{margin:0;min-height:100%;color:var(--text);
       </div>
     </div>
   </section>
+</div>
+
+<div class="ov" id="uov" hidden>
+  <div class="res up">
+    <h3 id="uTitle"></h3>
+    <div class="sub" id="uSub" style="margin-bottom:6px"></div>
+    <div class="ulist" id="uList"></div>
+    <form class="uadd" id="uForm" autocomplete="off">
+      <input id="uName" maxlength="12" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button class="btn main" id="uAdd" type="submit"></button>
+    </form>
+    <div class="umsg" id="uMsg"></div>
+    <div class="rb"><button class="btn" id="uGuest" type="button"></button><button class="btn" id="uClose" type="button"></button></div>
+  </div>
 </div>
 
 <div class="ov" id="ov" hidden>
@@ -266,6 +334,16 @@ ko:{
   okWord:'잘했어요! Space나 Enter를 눌러 다음으로 가요.', okSent:'좋아요! 다음 문장으로 가요.',
   good:'지금까지 잘 맞아요.',
   acc:'정확도', time:'시간(초)', spd:'타수/분', spdW:'타수/분', again:'다시 하기', nextLv:'다음 단계 ▶', home:'처음으로',
+  guest:'손님', userBtnT:'사용자 바꾸기',
+  uTitle:'누가 연습하나요?', uSub:'이름만 적으면 돼요. 기록은 이 기기(이 브라우저)에만 저장돼요.', uPh:'이름 (최대 12자)', uAdd:'등록',
+  uGuest:'등록 없이 해 보기 (기록 안 함)', uClose:'닫기', uEmpty:'아직 등록된 사람이 없어요.', uDel:'삭제', uDelSure:'정말 삭제', uCur:'사용 중',
+  uNeed:'이름을 적어 주세요.', uDup:'이미 있는 이름이에요.', uFull:'최대 8명까지 등록할 수 있어요.',
+  stCard:['내 기록 · 통계','연습 기록과 실력 변화 보기'], stTitle:'내 기록', stBack:'← 처음으로',
+  stGuest:'손님은 기록이 저장되지 않아요. 이름을 등록하면 기록이 쌓여요.', stReg:'이름 등록하기',
+  stEmpty:'아직 기록이 없어요. 연습을 한 판 끝내면 여기에 나타나요.',
+  tRounds:'연습 횟수', tTime:'총 연습 시간', tAcc:'평균 정확도', tDays:'연습한 날', uRound:'회', uDay:'일', uMin:'분', uSec:'초',
+  stByMode:'모드별 기록', stLangNote:'선택한 언어(한국어)의 기록이에요.', cRounds:'횟수', cAvg:'평균 정확도', cBest:'최고 속도', cClear:'완료 단계',
+  stWeek:'최근 7일 연습 시간 (분)', stTrend:'최근 정확도 변화 (%)', stRecent:'최근 기록', unitKeys:'키/분',
   rTitle:['좋은 시작이에요!','잘했어요!','대단해요!'],
   rSub:['연습할수록 빨라져요. 한 번 더 해 볼까요?','정확하게 잘 쳤어요. 조금만 더!','거의 완벽해요. 다음 단계로 가 볼까요?']
 },
@@ -282,6 +360,16 @@ en:{
   okWord:'Nice! Press Space or Enter to go on.', okSent:'Great! Next sentence.',
   good:'Looking good so far.',
   acc:'Accuracy', time:'Seconds', spd:'WPM', spdW:'WPM', again:'Try again', nextLv:'Next level ▶', home:'Home',
+  guest:'Guest', userBtnT:'Change user',
+  uTitle:'Who is practicing?', uSub:'Just type a name. Records are saved only on this device (this browser).', uPh:'Name (max 12 chars)', uAdd:'Add',
+  uGuest:'Try without signing up (no records)', uClose:'Close', uEmpty:'No one is registered yet.', uDel:'Delete', uDelSure:'Really delete', uCur:'In use',
+  uNeed:'Please type a name.', uDup:'That name already exists.', uFull:'Up to 8 people can be registered.',
+  stCard:['My Records & Stats','See your practice history and progress'], stTitle:'My records', stBack:'← Home',
+  stGuest:'Guests have no saved records. Add your name to start keeping records.', stReg:'Add my name',
+  stEmpty:'No records yet. Finish a round and it will show up here.',
+  tRounds:'Rounds', tTime:'Total time', tAcc:'Avg accuracy', tDays:'Days practiced', uRound:'', uDay:'', uMin:'m', uSec:'s',
+  stByMode:'By mode', stLangNote:'Records in the selected language (English).', cRounds:'Rounds', cAvg:'Avg acc.', cBest:'Best speed', cClear:'Cleared',
+  stWeek:'Practice time, last 7 days (min)', stTrend:'Recent accuracy (%)', stRecent:'Recent rounds', unitKeys:'keys/min',
   rTitle:['Good start!','Well done!','Excellent!'],
   rSub:['Practice makes you faster. One more round?','Nicely done. Almost there!','Nearly perfect. Ready for the next level?']
 }};
@@ -300,9 +388,60 @@ function esc(c){ return c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&
 function shuffle(a){ a = a.slice(); for (let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function strokesOf(s){ return S.lang === 'ko' ? s.normalize('NFD').length : s.length / 5; }
 
-function skey(mode, lvl){ return 'tp2_' + mode + '_' + S.lang + '_' + lvl; }
-function getStars(mode, lvl){ try { return Number(localStorage.getItem(skey(mode, lvl))) || 0; } catch(e){ return 0; } }
-function setStars(mode, lvl, n){ try { if (n > getStars(mode, lvl)) localStorage.setItem(skey(mode, lvl), String(n)); } catch(e){} }
+/* ---------- storage: users, stars, records (this device only) ---------- */
+const LS = {
+  get(k, d){ try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch(e){ return d; } },
+  set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch(e){ return false; } },
+  del(k){ try { localStorage.removeItem(k); } catch(e){} }
+};
+const MAX_USERS = 8, MAX_REC = 1000;
+const U = {users: LS.get('tp3_users', []), cur: LS.get('tp3_cur', null)};
+if (!Array.isArray(U.users)) U.users = [];
+if (U.cur && !U.users.some(u => u.id === U.cur)) U.cur = null;
+let guestStars = {};
+function curUser(){ return U.users.find(u => u.id === U.cur) || null; }
+function saveUsers(){ LS.set('tp3_users', U.users); if (U.cur) LS.set('tp3_cur', U.cur); else LS.del('tp3_cur'); }
+function escH(x){ return String(x).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function starsMap(){ return U.cur ? LS.get('tp3_stars_' + U.cur, {}) : guestStars; }
+function skey(mode, lvl){ return mode + '_' + S.lang + '_' + lvl; }
+function getStars(mode, lvl){ return Number(starsMap()[skey(mode, lvl)]) || 0; }
+function setStars(mode, lvl, n){
+  const mp = starsMap(), k = skey(mode, lvl);
+  if (n > (Number(mp[k]) || 0)){ mp[k] = n; if (U.cur) LS.set('tp3_stars_' + U.cur, mp); }
+}
+function getRecs(){ return U.cur ? LS.get('tp3_rec_' + U.cur, []) : []; }
+function addRec(r){
+  if (!U.cur) return;
+  const a = getRecs(); a.push(r);
+  LS.set('tp3_rec_' + U.cur, a.slice(-MAX_REC));
+}
+function legacyStars(){
+  const mp = {};
+  try {
+    for (let i = 0; i < localStorage.length; i++){
+      const k = localStorage.key(i), m = /^tp2_(keys|words|sents)_(ko|en)_(\d+)$/.exec(k || '');
+      if (m){ const n = Number(localStorage.getItem(k)) || 0; if (n) mp[m[1] + '_' + m[2] + '_' + m[3]] = n; }
+    }
+  } catch(e){}
+  return mp;
+}
+function addUser(name){
+  name = name.replace(/\s+/g, ' ').trim().slice(0, 12);
+  if (!name) return 'uNeed';
+  if (U.users.length >= MAX_USERS) return 'uFull';
+  if (U.users.some(u => u.name.toLowerCase() === name.toLowerCase())) return 'uDup';
+  const first = U.users.length === 0;
+  const u = {id: 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), name, created: Date.now()};
+  U.users.push(u); U.cur = u.id; saveUsers();
+  if (first){ const lg = legacyStars(); if (Object.keys(lg).length) LS.set('tp3_stars_' + u.id, lg); }
+  return null;
+}
+function delUser(id){
+  U.users = U.users.filter(u => u.id !== id);
+  LS.del('tp3_stars_' + id); LS.del('tp3_rec_' + id);
+  if (U.cur === id) U.cur = null;
+  saveUsers();
+}
 function levelCount(mode){ return t().levels[mode].length; }
 function starStr(n){ return '★'.repeat(n) + '☆'.repeat(3 - n); }
 
@@ -311,6 +450,7 @@ function showView(v){
   S.view = v;
   $('home').hidden = v !== 'home';
   $('play').hidden = v !== 'play';
+  $('stats').hidden = v !== 'stats';
   $('ov').hidden = true;
 }
 
@@ -325,8 +465,14 @@ function applyLang(){
   $('nextBtn').textContent = t().next;
   $('labT').textContent = t().labT;
   $('labY').textContent = t().labY;
+  $('stBack').textContent = t().stBack;
+  $('uTitle').textContent = t().uTitle; $('uSub').textContent = t().uSub;
+  $('uName').placeholder = t().uPh; $('uAdd').textContent = t().uAdd;
+  $('uGuest').textContent = t().uGuest; $('uClose').textContent = t().uClose;
+  renderUserBtn(); renderUsers();
   buildKeyboard();
   renderHome();
+  if (S.view === 'stats') renderStats();
 }
 
 function renderHome(){
@@ -336,8 +482,14 @@ function renderHome(){
       '<div><b>' + t().modes[m][0] + '</b><span>' + t().modes[m][1] + '</span></div>' +
       '<div class="pg">' + cleared + '/' + levelCount(m) + '</div></button>';
   }).join('');
-  $('modeCards').innerHTML = h;
-  $('modeCards').querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => startRound(b.dataset.m, 0)));
+  const nrec = getRecs().length;
+  const sc = '<button class="mode" data-m="stats"><div class="ic" style="background:#fff1d6">📊</div>' +
+    '<div><b>' + t().stCard[0] + '</b><span>' + t().stCard[1] + '</span></div>' +
+    (nrec ? '<div class="pg">' + nrec + t().uRound + '</div>' : '') + '</button>';
+  $('modeCards').innerHTML = h + sc;
+  $('modeCards').querySelectorAll('.mode').forEach(b => b.addEventListener('click', () => {
+    if (b.dataset.m === 'stats') openStats(); else startRound(b.dataset.m, 0);
+  }));
 }
 
 function renderChips(){
@@ -536,6 +688,7 @@ function finishText(){
 function showResult(r){
   const stars = r.acc >= 95 ? 3 : r.acc >= 85 ? 2 : 1;
   setStars(S.mode, S.level, stars);
+  addRec({ts: Date.now(), lang: S.lang, mode: S.mode, level: S.level, acc: r.acc, spd: r.spd, sec: Math.round(r.sec * 10) / 10, stars});
   S.lastRes = r;
   $('rStars').innerHTML = '★'.repeat(stars) + '<s>' + '★'.repeat(3 - stars) + '</s>';
   $('rTitle').textContent = t().rTitle[stars - 1];
@@ -548,6 +701,106 @@ function showResult(r){
   $('rNext').hidden = !hasNext; $('rNext').textContent = t().nextLv;
   $('ov').hidden = false;
   renderChips();
+}
+
+/* ---------- user panel ---------- */
+let uArm = null;
+function renderUserBtn(){
+  const u = curUser();
+  $('userBtn').textContent = '👤 ' + (u ? u.name : t().guest);
+  $('userBtn').title = t().userBtnT;
+}
+function renderUsers(){
+  const L = t();
+  if (!U.users.length){ $('uList').innerHTML = '<div class="uempty">' + L.uEmpty + '</div>'; return; }
+  $('uList').innerHTML = U.users.map(u =>
+    '<div class="urow"><button class="btn pick' + (u.id === U.cur ? ' on' : '') + '" data-id="' + u.id + '"><span>👤 ' + escH(u.name) + '</span>' +
+    (u.id === U.cur ? '<em>' + L.uCur + '</em>' : '') + '</button>' +
+    '<button class="btn del' + (uArm === u.id ? ' arm' : '') + '" data-del="' + u.id + '">' + (uArm === u.id ? L.uDelSure : L.uDel) + '</button></div>').join('');
+  $('uList').querySelectorAll('.pick').forEach(b => b.addEventListener('click', () => { selectUser(b.dataset.id); }));
+  $('uList').querySelectorAll('.del').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.del;
+    if (uArm === id){ uArm = null; delUser(id); afterUserChange(); renderUsers(); return; }
+    uArm = id; renderUsers();
+    setTimeout(() => { if (uArm === id){ uArm = null; renderUsers(); } }, 4000);
+  }));
+}
+function openUsers(){ uArm = null; $('uMsg').textContent = ''; $('uName').value = ''; renderUsers(); $('uov').hidden = false; }
+function closeUsers(){ $('uov').hidden = true; LS.set('tp3_seen', 1); }
+function afterUserChange(){
+  renderUserBtn();
+  if (S.view === 'play') showView('home');
+  renderHome();
+  if (S.view === 'stats') renderStats();
+}
+function selectUser(id){ U.cur = id; saveUsers(); uArm = null; afterUserChange(); closeUsers(); }
+
+/* ---------- stats ---------- */
+function pad2(n){ return (n < 10 ? '0' : '') + n; }
+function dkey(d){ return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+function fmtDur(sec){
+  const L = t();
+  if (sec < 60) return Math.round(sec) + L.uSec;
+  const m = Math.round(sec / 60);
+  return m >= 60 ? Math.floor(m / 60) + (S.lang === 'ko' ? '시간 ' : 'h ') + (m % 60) + L.uMin : m + L.uMin;
+}
+function barsHtml(vals, labels, fmt){
+  const mx = Math.max.apply(null, vals.concat([0.0001]));
+  return '<div class="bars">' + vals.map((v, i) =>
+    '<div class="bar"><em>' + (v ? fmt(v) : '') + '</em><i style="height:' + Math.max(2, Math.round(80 * v / mx)) + 'px"></i><small>' + escH(labels[i]) + '</small></div>').join('') + '</div>';
+}
+function openStats(){ showView('stats'); renderStats(); }
+function renderStats(){
+  const L = t(), u = curUser(), body = $('stBody');
+  $('stTitle').textContent = (u ? u.name + ' · ' : '') + L.stTitle;
+  if (!u){
+    body.innerHTML = '<div class="stmsg">' + L.stGuest + '<br><button class="btn main" id="stReg">' + L.stReg + '</button></div>';
+    $('stReg').addEventListener('click', openUsers); return;
+  }
+  const recs = getRecs();
+  if (!recs.length){ body.innerHTML = '<div class="stmsg">' + L.stEmpty + '</div>'; return; }
+  const n = recs.length;
+  const totSec = recs.reduce((a, r) => a + (r.sec || 0), 0);
+  const avgAcc = Math.round(recs.reduce((a, r) => a + (r.acc || 0), 0) / n);
+  const days = new Set(recs.map(r => dkey(new Date(r.ts)))).size;
+  let h = '<div class="stt">' +
+    '<div class="tile"><b>' + n + L.uRound + '</b><span>' + L.tRounds + '</span></div>' +
+    '<div class="tile"><b>' + fmtDur(totSec) + '</b><span>' + L.tTime + '</span></div>' +
+    '<div class="tile"><b>' + avgAcc + '%</b><span>' + L.tAcc + '</span></div>' +
+    '<div class="tile"><b>' + days + L.uDay + '</b><span>' + L.tDays + '</span></div></div>';
+  // per mode (selected language)
+  const mine = recs.filter(r => r.lang === S.lang);
+  h += '<div class="sec"><h4>' + L.stByMode + '</h4><p class="note">' + L.stLangNote + '</p>' +
+    '<div class="mrow hd"><div></div><div>' + L.cRounds + '</div><div>' + L.cAvg + '</div><div>' + L.cBest + '</div><div>' + L.cClear + '</div></div>';
+  ['keys','words','sents'].forEach(m => {
+    const a = mine.filter(r => r.mode === m);
+    const unit = m === 'keys' ? L.unitKeys : L.spd;
+    let cleared = 0; for (let i = 0; i < levelCount(m); i++) if (getStars(m, i) > 0) cleared++;
+    h += '<div class="mrow"><div>' + L.modes[m][0] + '</div><div>' + a.length + '</div><div>' +
+      (a.length ? Math.round(a.reduce((x, r) => x + r.acc, 0) / a.length) + '%' : '-') + '</div><div>' +
+      (a.length ? Math.max.apply(null, a.map(r => r.spd)) + ' ' + unit : '-') + '</div><div>' + cleared + '/' + levelCount(m) + '</div></div>';
+  });
+  h += '</div>';
+  // last 7 days
+  const vals = [], labs = [], today = new Date();
+  const perDay = {}; recs.forEach(r => { const k = dkey(new Date(r.ts)); perDay[k] = (perDay[k] || 0) + (r.sec || 0); });
+  for (let i = 6; i >= 0; i--){
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+    vals.push(Math.round((perDay[dkey(d)] || 0) / 6) / 10); labs.push((d.getMonth() + 1) + '/' + d.getDate());
+  }
+  h += '<div class="sec"><h4>' + L.stWeek + '</h4>' + barsHtml(vals, labs, v => v) + '</div>';
+  // accuracy trend (last 12)
+  const last = recs.slice(-12);
+  h += '<div class="sec"><h4>' + L.stTrend + '</h4>' + barsHtml(last.map(r => r.acc), last.map((r, i) => String(n - last.length + i + 1)), v => v) + '</div>';
+  // recent 10
+  h += '<div class="sec"><h4>' + L.stRecent + '</h4>' + recs.slice(-10).reverse().map(r => {
+    const d = new Date(r.ts), lv = (T[r.lang] || L).levels[r.mode][r.level] || '';
+    const unit = r.mode === 'keys' ? (T[r.lang] || L).unitKeys : (T[r.lang] || L).spd;
+    return '<div class="rrow"><div class="d">' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()) + ' ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes()) + '</div>' +
+      '<div class="w">' + (r.lang === 'ko' ? '한 ' : 'EN ') + (T[r.lang] || L).modes[r.mode][0] + ' · ' + escH(lv) + '</div>' +
+      '<div class="n">' + r.acc + '% · ' + r.spd + unit + '</div><div class="st">' + '★'.repeat(r.stars || 0) + '</div></div>';
+  }).join('') + '</div>';
+  body.innerHTML = h;
 }
 
 /* ---------- events ---------- */
@@ -566,7 +819,7 @@ inp.addEventListener('keydown', e => {
 });
 
 document.addEventListener('keydown', e => {
-  if (S.view !== 'play' || e.ctrlKey || e.metaKey || e.altKey || !$('ov').hidden) return;
+  if (S.view !== 'play' || e.ctrlKey || e.metaKey || e.altKey || !$('ov').hidden || !$('uov').hidden) return;
   if (S.mode === 'keys'){
     if (e.repeat) return;
     const c = resolveCode(e);
@@ -595,8 +848,22 @@ document.querySelectorAll('#langSeg button').forEach(b => b.addEventListener('cl
   if (S.view === 'play') startRound(S.mode, Math.min(S.level, levelCount(S.mode) - 1));
 }));
 
+$('stBack').addEventListener('click', () => { showView('home'); renderHome(); });
+$('userBtn').addEventListener('click', openUsers);
+$('uClose').addEventListener('click', closeUsers);
+$('uGuest').addEventListener('click', () => { U.cur = null; saveUsers(); closeUsers(); afterUserChange(); });
+$('uov').addEventListener('click', e => { if (e.target === $('uov')) closeUsers(); });
+$('uForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const err = addUser($('uName').value);
+  if (err){ $('uMsg').textContent = t()[err]; return; }
+  $('uName').value = ''; $('uMsg').textContent = '';
+  afterUserChange(); closeUsers();
+});
+
 applyLang();
 showView('home');
+if (!U.users.length && !LS.get('tp3_seen', 0)) openUsers();
 </script>
 </body>
 </html>
