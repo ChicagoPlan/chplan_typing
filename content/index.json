@@ -73,6 +73,14 @@
    "author": "KJV (Matthew 6:9-13) / The Church Hymnary (1893)",
    "file": "en_prayers.json",
    "count": 16
+  },
+  {
+   "id": "ko_john",
+   "lang": "ko",
+   "title": "요한복음 (개역한글판)",
+   "author": "대한성서공회 개역한글판(1961)",
+   "file": "ko_john.json",
+   "count": 20
   }
  ]
 }
